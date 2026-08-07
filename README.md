@@ -1,7 +1,6 @@
 # printshop-management-system
 
 Members:
-- Ybañez, Julienne
-- Largo, Timothy John
-- Largo, Jacob Isaac
-- Ramos, Minnie Grace
+ Ybañez, Julienne
+ Largo, Timothy John O.
+ Largo, Jacob Isaac O.
