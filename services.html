@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Services • PaPrint</title>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/pages/services.css">
+</head>
+<body>
+  <div class="shell">
+    <aside id="sidebar"></aside>
+
+    <main class="main">
+      <header id="topbar"></header>
+
+      <section class="page">
+        <header class="page-heading">
+          <h1>Choose a print service</h1>
+          <p>Select a service to create a print job.</p>
+        </header>
+
+        <section class="card card-pad service-toolbar">
+          <div class="grid grid-2">
+            <div class="field">
+              <label for="serviceSearch">Search services</label>
+              <input class="input" id="serviceSearch" type="search" placeholder="Search printing, binding, scanning...">
+            </div>
+
+            <div class="field">
+              <label for="serviceCategory">Category</label>
+              <select id="serviceCategory">
+                <option value="all">All services</option>
+                <option value="printing">Printing</option>
+                <option value="photocopy">Photocopy</option>
+                <option value="photo">Photo</option>
+                <option value="finishing">Finishing</option>
+                <option value="scanning">Scanning</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="service-grid" data-service-grid></section>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/pricing.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/pages/services.js"></script>
+</body>
+</html>
