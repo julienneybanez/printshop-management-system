@@ -25,7 +25,7 @@
 
     return (
       '<a class="brand" href="index.html">' +
-        '<img class="brand-logo" src="assets/images/logo.svg" alt="">' +
+        '<img class="brand-logo" src="assets/images/logo.png" alt="">' +
         '<span class="brand-name">Pa<span>Print</span></span>' +
       "</a>" +
       '<nav class="nav-group" aria-label="Main navigation">' + nav + "</nav>"
