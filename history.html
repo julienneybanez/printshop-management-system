@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>History • PaPrint</title>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/pages/history.css">
+</head>
+<body>
+  <div class="shell">
+    <aside id="sidebar"></aside>
+
+    <main class="main">
+      <header id="topbar"></header>
+
+      <section class="page">
+        <header class="page-heading">
+          <h1>Completed and cancelled jobs</h1>
+        </header>
+
+        <section class="card card-pad history-toolbar">
+          <div class="grid grid-2">
+            <div class="field">
+              <label for="historySearch">Search history</label>
+              <input class="input" id="historySearch" type="search" placeholder="Queue no., customer, service...">
+            </div>
+
+            <div class="field">
+              <label for="historyStatus">Status</label>
+              <select id="historyStatus">
+                <option value="all">All</option>
+                <option value="claimed">Claimed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Queue</th>
+                  <th>Customer</th>
+                  <th>Service</th>
+                  <th>Created</th>
+                  <th>Status</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody data-history-body></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/pricing.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/pages/history.js"></script>
+</body>
+</html>

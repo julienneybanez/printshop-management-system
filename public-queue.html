@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Public Queue • PaPrint</title>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/pages/public-queue.css">
+</head>
+<body>
+  <main class="public-shell">
+    <header class="public-header">
+      <a class="brand public-brand" href="index.html">
+        <img class="brand-logo" src="assets/images/logo.png" alt="">
+        <span class="brand-name">Pa<span>Print</span></span>
+      </a>
+
+      <div style="text-align:right">
+        <div class="helper">Current time</div>
+        <strong data-clock></strong>
+      </div>
+    </header>
+
+    <section class="public-heading">
+      <h1>Print Queue</h1>
+      <p>Check your queue number and current print status.</p>
+    </section>
+
+    <section class="public-board">
+      <article class="card now-serving" data-now-serving></article>
+
+      <article class="card public-list">
+        <div class="section-heading">
+          <h2>Active queue</h2>
+          <span class="badge badge-ready">Live</span>
+        </div>
+
+        <div data-public-list></div>
+      </article>
+    </section>
+
+    <div class="notice public-note">
+      Customer details are hidden from the public queue.
+    </div>
+
+    <div class="public-back">
+      <a class="btn btn-neutral" href="index.html">← Back to Dashboard</a>
+    </div>
+  </main>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/pages/public-queue.js"></script>
+</body>
+</html>
