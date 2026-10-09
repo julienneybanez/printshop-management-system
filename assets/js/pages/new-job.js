@@ -12,7 +12,17 @@ document.addEventListener("DOMContentLoaded", function () {
   var params = new URLSearchParams(window.location.search);
   var selectedFromUrl = params.get("service");
   var editMode = params.get("edit") === "1";
-  var existingDraft = editMode ? PaPrint.storage.getDraft() : null;
+  var editOrderId = params.get("editOrder");
+  var savedOrder = editOrderId ? PaPrint.storage.getOrders().find(function(o){return o.id===editOrderId;}) : null;
+  if (editOrderId && !PaPrint.storage.canEdit(savedOrder)) {
+    PaPrint.ui.toast("Only received jobs can be edited.");
+    window.location.replace("queue.html");
+    return;
+  }
+  var existingDraft = savedOrder ? { customer:savedOrder.customer, service:savedOrder.service,
+    specifications:savedOrder.specifications, priority:savedOrder.priority,
+    deadline:savedOrder.deadline, pickupSlot:savedOrder.pickupSlot } :
+    (editMode ? PaPrint.storage.getDraft() : null);
 
   PaPrint.config.services.forEach(function (service) {
     var option = document.createElement("option");
@@ -191,7 +201,10 @@ document.addEventListener("DOMContentLoaded", function () {
         id: service.id,
         name: service.name
       },
-      specifications: specs
+      specifications: specs,
+      priority: document.querySelector("#priority").value,
+      deadline: document.querySelector("#deadline").value,
+      pickupSlot: document.querySelector("#pickupSlot").value
     };
 
     base.pricing = PaPrint.pricing.calculate(base);
@@ -239,7 +252,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   serviceFields.addEventListener("input", updatePrice);
   serviceFields.addEventListener("change", updatePrice);
-  document.querySelector("#rush").addEventListener("change", updatePrice);
+  document.querySelector("#rush").addEventListener("change", function () {
+    if (this.checked) document.querySelector("#priority").value = "rush";
+    updatePrice();
+  });
+  document.querySelector("#priority").addEventListener("change", function () {
+    document.querySelector("#rush").checked = this.value === "rush";
+    updatePrice();
+  });
   document.querySelector("#contact").addEventListener("input", validateContact);
 
   form.addEventListener("submit", function (event) {
@@ -250,6 +270,28 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!form.reportValidity()) return;
 
     var draft = buildDraft();
+    if (draft.pickupSlot && PaPrint.storage.pickupCount(draft.pickupSlot) >= PaPrint.storage.slotCapacity) {
+      PaPrint.ui.toast("This pickup window is full. Choose a different one."); return;
+    }
+    if (draft.deadline && new Date(draft.deadline).getTime() <= Date.now()) {
+      PaPrint.ui.toast("Deadline must be in the future."); return;
+    }
+    if (savedOrder) {
+      if (!PaPrint.storage.canEdit(PaPrint.storage.getOrders().find(function(o){return o.id===editOrderId;}))) {
+        PaPrint.ui.toast("This order can no longer be edited."); return;
+      }
+      if (draft.pickupSlot && PaPrint.storage.pickupCount(draft.pickupSlot, editOrderId) >= PaPrint.storage.slotCapacity) {
+        PaPrint.ui.toast("This pickup slot is full.");return;
+      }
+      var customer = PaPrint.storage.upsertCustomer(draft.customer);
+      PaPrint.storage.updateOrder(editOrderId,function(order){
+        order.customer = Object.assign({},draft.customer,{customerId:customer&&customer.id});
+        order.service=draft.service;order.specifications=draft.specifications;order.pricing=draft.pricing;
+        order.priority=draft.priority;order.deadline=draft.deadline;order.pickupSlot=draft.pickupSlot;
+        return order;
+      });
+      window.location.href="job-details.html?id="+encodeURIComponent(editOrderId);return;
+    }
     PaPrint.storage.saveDraft(draft);
     window.location.href = "order-review.html";
   });
@@ -258,8 +300,12 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("#customerName").value = existingDraft.customer && existingDraft.customer.name || "";
     document.querySelector("#contact").value = existingDraft.customer && existingDraft.customer.contact || "";
     document.querySelector("#rush").checked = Boolean(existingDraft.specifications && existingDraft.specifications.rush);
+    document.querySelector("#priority").value = existingDraft.priority || (existingDraft.specifications && existingDraft.specifications.rush ? "rush" : "normal");
+    document.querySelector("#deadline").value = existingDraft.deadline || "";
+    document.querySelector("#pickupSlot").value = existingDraft.pickupSlot || "";
     document.querySelector("#notes").value = existingDraft.specifications && existingDraft.specifications.notes || "";
   }
 
   renderServiceFields();
+  if (existingDraft && existingDraft.specifications) { restoreServiceFields(existingDraft.specifications); updatePrice(); }
 });

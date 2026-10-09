@@ -144,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   encodeURIComponent(order.id) +
                 '">Manage in Queue</a>'
               : '<a class="btn btn-primary" href="history.html">View History</a>') +
+            (PaPrint.storage.canEdit(order) ? '<a class="btn btn-neutral" href="new-job.html?editOrder=' + encodeURIComponent(order.id) + '">Edit received job</a>' : "") +
             '<a class="btn btn-neutral" href="new-job.html?service=' +
               encodeURIComponent(order.service && order.service.id || "") +
             '">Create Similar Job</a>' +

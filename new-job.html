@@ -31,7 +31,7 @@
               <div class="form-grid">
                 <div class="field">
                   <label for="customerName">Customer name</label>
-                  <input class="input" id="customerName" type="text" autocomplete="name" required placeholder="e.g. Maria Santos">
+                  <input class="input" id="customerName" type="text" autocomplete="name" required placeholder="e.g. Sophia Laforteza">
                 </div>
 
                 <div class="field">
@@ -64,6 +64,9 @@
                   <div class="helper">Rush orders are prioritized.</div>
                 </div>
 
+                <div class="field"><label for="priority">Job priority</label><select id="priority"><option value="normal">Normal</option><option value="high">High</option><option value="rush">Rush</option></select></div>
+                <div class="field"><label for="deadline">Deadline</label><input class="input" id="deadline" type="datetime-local"></div>
+                <div class="field"><label for="pickupSlot">Pickup window (up to 3 active jobs)</label><input class="input" id="pickupSlot" type="datetime-local" step="3600"></div>
                 <div class="field field-full">
                   <label for="notes">Notes</label>
                   <textarea id="notes" placeholder="Add instructions..."></textarea>
