@@ -1,6 +1,94 @@
 (function (app) {
   "use strict";
 
+  var THEME_KEY = "paprint_theme";
+  var DARK_STYLESHEET_ID = "paprintDarkModeStyles";
+
+  function ensureThemeStylesheet() {
+    if (document.getElementById(DARK_STYLESHEET_ID)) return;
+
+    var link = document.createElement("link");
+    link.id = DARK_STYLESHEET_ID;
+    link.rel = "stylesheet";
+    link.href = "assets/css/pages/dark-mode.css";
+    document.head.appendChild(link);
+  }
+
+  function getSavedTheme() {
+    try {
+      var saved = localStorage.getItem(THEME_KEY);
+      return saved === "dark" || saved === "light" ? saved : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function preferredTheme() {
+    var saved = getSavedTheme();
+
+    if (saved) return saved;
+
+    if (window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      return "dark";
+    }
+
+    return "light";
+  }
+
+  function currentTheme() {
+    return document.documentElement.getAttribute("data-theme") || preferredTheme();
+  }
+
+  function saveTheme(theme) {
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch (error) {
+      // Theme still works for the current page when storage is unavailable.
+    }
+  }
+
+  function updateThemeControls(theme) {
+    document.querySelectorAll("[data-theme-toggle]").forEach(function (button) {
+      var dark = theme === "dark";
+      var icon = button.querySelector("[data-theme-icon]");
+      var label = button.querySelector("[data-theme-label]");
+
+      if (icon) icon.textContent = dark ? "☀" : "☾";
+      if (label) label.textContent = dark ? "Light" : "Dark";
+
+      button.setAttribute(
+        "aria-label",
+        dark ? "Switch to light mode" : "Switch to dark mode"
+      );
+      button.setAttribute(
+        "title",
+        dark ? "Switch to light mode" : "Switch to dark mode"
+      );
+      button.setAttribute("aria-pressed", String(dark));
+    });
+  }
+
+  function setTheme(theme, persist) {
+    var normalized = theme === "dark" ? "dark" : "light";
+
+    document.documentElement.setAttribute("data-theme", normalized);
+    document.documentElement.style.colorScheme = normalized;
+
+    if (persist !== false) {
+      saveTheme(normalized);
+    }
+
+    updateThemeControls(normalized);
+  }
+
+  function toggleTheme() {
+    setTheme(currentTheme() === "dark" ? "light" : "dark", true);
+  }
+
+  ensureThemeStylesheet();
+  setTheme(preferredTheme(), false);
+
   var navItems = [
     { id: "dashboard", label: "Dashboard", href: "index.html", icon: "⌂" },
     { id: "services", label: "Services", href: "services.html", icon: "▦" },
@@ -8,6 +96,7 @@
     { id: "review", label: "Order Review", href: "order-review.html", icon: "✓" },
     { id: "queue", label: "Job Queue", href: "queue.html", icon: "≡" },
     { id: "history", label: "History", href: "history.html", icon: "↺" },
+    { id: "reports", label: "Reports", href: "reports.html", icon: "▥" },
     { id: "public", label: "Public Queue", href: "public-queue.html", icon: "◉" }
   ];
 
@@ -40,6 +129,10 @@
       "</div>" +
       '<div class="topbar-actions">' +
         '<a class="btn btn-secondary btn-sm" href="public-queue.html">Public Queue</a>' +
+        '<button class="btn btn-neutral btn-sm theme-toggle" type="button" data-theme-toggle aria-pressed="false">' +
+          '<span class="theme-toggle-icon" data-theme-icon aria-hidden="true">☾</span>' +
+          '<span class="theme-toggle-label" data-theme-label>Dark</span>' +
+        "</button>" +
         '<a class="btn btn-primary btn-sm" href="new-job.html">+ New Job</a>' +
       "</div>"
     );
@@ -61,13 +154,19 @@
       topbar.innerHTML = topbarMarkup(options.title || "PaPrint");
     }
 
-    var toggle = document.querySelector("[data-nav-toggle]");
+    var navToggle = document.querySelector("[data-nav-toggle]");
+    var themeToggle = document.querySelector("[data-theme-toggle]");
 
-    if (toggle) {
-      toggle.addEventListener("click", function () {
+    if (navToggle) {
+      navToggle.addEventListener("click", function () {
         var isOpen = document.body.classList.toggle("nav-open");
-        toggle.setAttribute("aria-expanded", String(isOpen));
+        navToggle.setAttribute("aria-expanded", String(isOpen));
       });
+    }
+
+    if (themeToggle) {
+      themeToggle.addEventListener("click", toggleTheme);
+      updateThemeControls(currentTheme());
     }
 
     document.addEventListener("click", function (event) {
@@ -77,8 +176,8 @@
 
       document.body.classList.remove("nav-open");
 
-      if (toggle) {
-        toggle.setAttribute("aria-expanded", "false");
+      if (navToggle) {
+        navToggle.setAttribute("aria-expanded", "false");
       }
     });
 
@@ -162,6 +261,9 @@
   app.ui = {
     initShell: initShell,
     toast: toast,
-    confirmAction: confirmAction
+    confirmAction: confirmAction,
+    getTheme: currentTheme,
+    setTheme: setTheme,
+    toggleTheme: toggleTheme
   };
 })(window.PaPrint);

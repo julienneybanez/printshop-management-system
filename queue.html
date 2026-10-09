@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Job Queue • PaPrint</title>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/pages/queue.css">
+</head>
+<body>
+  <div class="shell">
+    <aside id="sidebar"></aside>
+
+    <main class="main">
+      <header id="topbar"></header>
+
+      <section class="page">
+        <header class="page-heading queue-heading">
+          <div>
+            <h1>Manage print jobs</h1>
+            <p>Update each order as it moves from received to claimed.</p>
+          </div>
+          <a class="btn btn-primary" href="new-job.html">+ New Job</a>
+        </header>
+
+        <div class="notice notice-success queue-created-notice" data-created-notice hidden></div>
+
+        <section class="card card-pad queue-toolbar">
+          <div class="queue-toolbar-grid">
+            <div class="field">
+              <label for="queueSearch">Search queue</label>
+              <input class="input" id="queueSearch" type="search" placeholder="Queue no., customer, service...">
+            </div>
+
+            <div class="field">
+              <label for="queueStatus">Status</label>
+              <select id="queueStatus">
+                <option value="all">All active statuses</option>
+                <option value="received">Received</option>
+                <option value="printing">Printing</option>
+                <option value="finishing">Finishing</option>
+                <option value="ready">Ready</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="queue-filter-row" aria-label="Quick queue filters">
+            <button class="chip active" type="button" data-queue-filter="all">All</button>
+            <button class="chip" type="button" data-queue-filter="received">Received</button>
+            <button class="chip" type="button" data-queue-filter="printing">Printing</button>
+            <button class="chip" type="button" data-queue-filter="finishing">Finishing</button>
+            <button class="chip" type="button" data-queue-filter="ready">Ready</button>
+          </div>
+        </section>
+
+        <section class="card queue-table-card">
+          <div class="queue-list" data-queue-list></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/pricing.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/pages/queue.js"></script>
+</body>
+</html>

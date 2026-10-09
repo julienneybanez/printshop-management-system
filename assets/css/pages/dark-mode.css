@@ -1,0 +1,182 @@
+/* PaPrint shared dark mode.
+   Loaded automatically by the updated assets/js/ui.js. */
+
+.theme-toggle {
+  min-width: 78px;
+}
+
+.theme-toggle-icon {
+  width: 16px;
+  display: inline-grid;
+  place-items: center;
+  font-size: 15px;
+  line-height: 1;
+}
+
+html[data-theme="dark"] {
+  --bg: #0d1320;
+  --surface: #151d2b;
+  --surface-soft: #1a2433;
+  --surface-muted: #202c3d;
+  --text: #edf2f7;
+  --text-soft: #c6d0de;
+  --muted: #94a0b2;
+  --line: #2a3648;
+  --primary: #86a4ff;
+  --primary-dark: #7292ee;
+  --primary-soft: #202d50;
+  --teal: #58d6ca;
+  --teal-soft: #153b38;
+  --warning: #f0b35c;
+  --warning-soft: #3e2e17;
+  --danger: #f28b82;
+  --danger-soft: #402324;
+  --success: #72d5a3;
+  --success-soft: #173728;
+  --shadow-sm: 0 5px 18px rgba(0, 0, 0, 0.18);
+  --shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="dark"] body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .sidebar {
+  background: #0a101b;
+  color: #dbe4f0;
+}
+
+html[data-theme="dark"] .nav-link {
+  color: #a7b4c6;
+}
+
+html[data-theme="dark"] .nav-link:hover,
+html[data-theme="dark"] .nav-link:focus-visible {
+  background: #182334;
+  color: #fff;
+}
+
+html[data-theme="dark"] .nav-link.active {
+  background: #23314a;
+  color: #fff;
+}
+
+html[data-theme="dark"] .topbar {
+  background: rgba(21, 29, 43, 0.94);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .btn-neutral,
+html[data-theme="dark"] .input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] .chip,
+html[data-theme="dark"] .toast,
+html[data-theme="dark"] .modal {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea {
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: #758297;
+}
+
+html[data-theme="dark"] .input:focus,
+html[data-theme="dark"] select:focus,
+html[data-theme="dark"] textarea:focus {
+  border-color: #6686e7;
+  box-shadow: 0 0 0 4px rgba(134, 164, 255, 0.10);
+}
+
+html[data-theme="dark"] .table tbody tr:hover {
+  background: var(--surface-soft);
+}
+
+html[data-theme="dark"] .metric::after {
+  background: rgba(134, 164, 255, 0.08);
+}
+
+html[data-theme="dark"] .badge-received {
+  background: #252f55;
+  color: #aabaff;
+}
+
+html[data-theme="dark"] .badge-printing {
+  background: #193a59;
+  color: #91c5f4;
+}
+
+html[data-theme="dark"] .badge-claimed {
+  background: #2b3340;
+  color: #bdc6d4;
+}
+
+html[data-theme="dark"] .notice {
+  border-color: #304369;
+  background: #18243b;
+  color: #b8c8e6;
+}
+
+html[data-theme="dark"] .notice-success {
+  border-color: #28533d;
+  background: #183126;
+  color: #8bd6aa;
+}
+
+html[data-theme="dark"] .btn-teal {
+  color: var(--teal);
+}
+
+html[data-theme="dark"] .service-price {
+  color: var(--teal);
+}
+
+/* public-queue.css uses a hard-coded light page background */
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 10% 10%, rgba(134, 164, 255, 0.10), transparent 25%),
+    radial-gradient(circle at 90% 90%, rgba(88, 214, 202, 0.08), transparent 25%),
+    var(--bg);
+}
+
+/* Job Details timeline ring */
+html[data-theme="dark"] .status-history-dot {
+  border-color: var(--surface);
+}
+
+/* Keep browser autofill legible in dark mode */
+html[data-theme="dark"] input:-webkit-autofill,
+html[data-theme="dark"] input:-webkit-autofill:hover,
+html[data-theme="dark"] input:-webkit-autofill:focus,
+html[data-theme="dark"] textarea:-webkit-autofill,
+html[data-theme="dark"] select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text);
+  -webkit-box-shadow: 0 0 0 1000px var(--surface) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
+@media (max-width: 560px) {
+  .theme-toggle {
+    min-width: 38px;
+    padding-inline: 10px;
+  }
+
+  .theme-toggle-label {
+    display: none;
+  }
+}

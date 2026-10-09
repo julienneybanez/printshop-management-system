@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard • PaPrint</title>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/pages/dashboard.css">
+</head>
+<body>
+  <div class="shell">
+    <aside id="sidebar"></aside>
+
+    <main class="main">
+      <header id="topbar"></header>
+
+      <section class="page">
+        <header class="page-heading dashboard-heading">
+          <div>
+            <h1>Print shop overview</h1>
+            <p>Monitor active jobs and see what needs attention next.</p>
+          </div>
+          <a class="btn btn-primary dashboard-new-job" href="new-job.html">+ Create New Job</a>
+        </header>
+
+        <section class="grid grid-4 dashboard-metrics" aria-label="Queue summary">
+          <article class="card metric">
+            <div class="metric-label">Active jobs</div>
+            <div class="metric-value" data-metric-active>0</div>
+            <div class="metric-note">Jobs still in the workflow</div>
+          </article>
+
+          <article class="card metric">
+            <div class="metric-label">Waiting</div>
+            <div class="metric-value" data-metric-received>0</div>
+            <div class="metric-note">Received and waiting to print</div>
+          </article>
+
+          <article class="card metric">
+            <div class="metric-label">In progress</div>
+            <div class="metric-value" data-metric-progress>0</div>
+            <div class="metric-note">Printing or finishing</div>
+          </article>
+
+          <article class="card metric">
+            <div class="metric-label">Ready</div>
+            <div class="metric-value" data-metric-ready>0</div>
+            <div class="metric-note">Waiting to be claimed</div>
+          </article>
+        </section>
+
+        <section class="dashboard-layout">
+          <section class="card dashboard-queue-card">
+            <div class="section-heading dashboard-section-heading">
+              <div>
+                <h2>Current queue</h2>
+                <p class="helper">Rush jobs are shown first.</p>
+              </div>
+              <a class="btn btn-neutral btn-sm" href="queue.html">Manage Queue</a>
+            </div>
+
+            <div class="dashboard-queue-list" data-dashboard-queue></div>
+          </section>
+
+          <aside class="dashboard-side">
+            <section class="card card-pad">
+              <div class="section-heading">
+                <h2>Queue status</h2>
+              </div>
+
+              <div class="status-summary">
+                <div class="status-summary-row">
+                  <span><span class="status-dot status-dot-received"></span>Received</span>
+                  <strong data-status-received>0</strong>
+                </div>
+                <div class="status-summary-row">
+                  <span><span class="status-dot status-dot-printing"></span>Printing</span>
+                  <strong data-status-printing>0</strong>
+                </div>
+                <div class="status-summary-row">
+                  <span><span class="status-dot status-dot-finishing"></span>Finishing</span>
+                  <strong data-status-finishing>0</strong>
+                </div>
+                <div class="status-summary-row">
+                  <span><span class="status-dot status-dot-ready"></span>Ready</span>
+                  <strong data-status-ready>0</strong>
+                </div>
+              </div>
+            </section>
+
+            <section class="card card-pad quick-actions">
+              <div class="section-heading">
+                <h2>Quick actions</h2>
+              </div>
+              <a class="quick-action" href="new-job.html">
+                <span class="quick-action-icon">＋</span>
+                <span><strong>New print job</strong><small>Create and price an order</small></span>
+              </a>
+              <a class="quick-action" href="services.html">
+                <span class="quick-action-icon">▦</span>
+                <span><strong>View services</strong><small>Browse available print services</small></span>
+              </a>
+              <a class="quick-action" href="public-queue.html">
+                <span class="quick-action-icon">◉</span>
+                <span><strong>Public queue</strong><small>Open the customer-facing display</small></span>
+              </a>
+            </section>
+          </aside>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/pricing.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/pages/dashboard.js"></script>
+</body>
+</html>
