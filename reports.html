@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reports • PaPrint</title>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/pages/reports.css">
+</head>
+<body>
+  <div class="shell">
+    <aside id="sidebar"></aside>
+
+    <main class="main">
+      <header id="topbar"></header>
+
+      <section class="page">
+        <header class="page-heading reports-heading">
+          <div>
+            <h1>Reports and analytics</h1>
+            <p>Review order volume, revenue, service usage, and completed job activity.</p>
+          </div>
+          <button class="btn btn-neutral" type="button" data-export-report>Export CSV</button>
+        </header>
+
+        <section class="grid grid-4 reports-metrics" aria-label="Report summary">
+          <article class="card metric">
+            <div class="metric-label">Total jobs</div>
+            <div class="metric-value" data-report-total-jobs>0</div>
+            <div class="metric-note">All recorded print jobs</div>
+          </article>
+
+          <article class="card metric">
+            <div class="metric-label">Completed</div>
+            <div class="metric-value" data-report-completed>0</div>
+            <div class="metric-note">Claimed customer orders</div>
+          </article>
+
+          <article class="card metric">
+            <div class="metric-label">Total revenue</div>
+            <div class="metric-value metric-money" data-report-revenue>₱0.00</div>
+            <div class="metric-note">Revenue from claimed jobs</div>
+          </article>
+
+          <article class="card metric">
+            <div class="metric-label">Rush jobs</div>
+            <div class="metric-value" data-report-rush>0</div>
+            <div class="metric-note">Orders marked as priority</div>
+          </article>
+        </section>
+
+        <section class="reports-layout">
+          <section class="card">
+            <div class="section-heading reports-section-heading">
+              <div>
+                <h2>Service performance</h2>
+                <p class="helper">Orders and revenue grouped by service.</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Orders</th>
+                    <th>Completed</th>
+                    <th>Revenue</th>
+                  </tr>
+                </thead>
+                <tbody data-service-report-body></tbody>
+              </table>
+            </div>
+          </section>
+
+          <aside class="reports-side">
+            <section class="card card-pad">
+              <div class="section-heading"><h2>Order status</h2></div>
+              <div class="report-status-list" data-report-status-list></div>
+            </section>
+
+            <section class="card card-pad">
+              <div class="section-heading"><h2>Highlights</h2></div>
+              <div class="report-highlight">
+                <span>Most used service</span>
+                <strong data-report-top-service>—</strong>
+              </div>
+              <div class="report-highlight">
+                <span>Average completed order</span>
+                <strong data-report-average>₱0.00</strong>
+              </div>
+              <div class="report-highlight">
+                <span>Cancelled orders</span>
+                <strong data-report-cancelled>0</strong>
+              </div>
+              <div class="report-highlight">
+                <span>Active jobs</span>
+                <strong data-report-active>0</strong>
+              </div>
+            </section>
+          </aside>
+        </section>
+
+        <section class="card reports-recent-card">
+          <div class="section-heading reports-section-heading">
+            <div>
+              <h2>Recent completed jobs</h2>
+              <p class="helper">Latest claimed orders recorded by the system.</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Queue</th>
+                  <th>Customer</th>
+                  <th>Service</th>
+                  <th>Completed</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody data-recent-report-body></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/pricing.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/pages/reports.js"></script>
+</body>
+</html>
