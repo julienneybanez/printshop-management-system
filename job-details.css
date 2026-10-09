@@ -1,0 +1,166 @@
+.job-details-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.job-details-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.75fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.job-details-main,
+.job-details-side {
+  display: grid;
+  gap: 22px;
+}
+
+.job-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.job-summary-item {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-soft);
+}
+
+.job-summary-item span,
+.spec-row span:first-child {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.job-summary-item strong {
+  display: block;
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+
+.spec-list {
+  display: grid;
+}
+
+.spec-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.45fr) minmax(0, 1fr);
+  gap: 18px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.spec-row:last-child {
+  border-bottom: 0;
+}
+
+.spec-row strong {
+  overflow-wrap: anywhere;
+}
+
+.job-price-total {
+  font-size: 26px;
+  color: var(--primary);
+}
+
+.status-history {
+  display: grid;
+  gap: 0;
+}
+
+.status-history-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 12px;
+  padding-bottom: 18px;
+}
+
+.status-history-item:last-child {
+  padding-bottom: 0;
+}
+
+.status-history-item::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  bottom: -2px;
+  left: 6px;
+  width: 2px;
+  background: var(--line);
+}
+
+.status-history-item:last-child::before {
+  display: none;
+}
+
+.status-history-dot {
+  position: relative;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  margin-top: 4px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.status-history-content strong,
+.status-history-content small {
+  display: block;
+}
+
+.status-history-content small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.job-note {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.job-details-actions {
+  display: grid;
+  gap: 9px;
+}
+
+.job-details-actions .btn {
+  width: 100%;
+}
+
+@media (max-width: 980px) {
+  .job-details-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .job-details-heading {
+    align-items: stretch;
+  }
+
+  .job-details-heading > .btn {
+    display: none;
+  }
+
+  .job-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .spec-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

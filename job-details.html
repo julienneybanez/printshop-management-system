@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Job Details • PaPrint</title>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/pages/job-details.css">
+</head>
+<body>
+  <div class="shell">
+    <aside id="sidebar"></aside>
+
+    <main class="main">
+      <header id="topbar"></header>
+
+      <section class="page">
+        <header class="page-heading job-details-heading">
+          <div>
+            <span class="step-label">Order information</span>
+            <h1 data-job-title>Job Details</h1>
+            <p>View the customer, specifications, pricing, and status history for this print job.</p>
+          </div>
+          <a class="btn btn-neutral" href="queue.html">← Back to Queue</a>
+        </header>
+
+        <div data-job-details-host></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/pricing.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/pages/job-details.js"></script>
+</body>
+</html>
