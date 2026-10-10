@@ -1,0 +1,1 @@
+.customer-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));align-items:end;gap:16px;margin-bottom:18px}.customer-form .btn{min-height:42px} .page .card + .card{margin-top:16px}
