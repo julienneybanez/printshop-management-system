@@ -28,16 +28,21 @@
                 <h2>Customer details</h2>
               </div>
 
-              <div class="form-grid">
+              <div class="field" style="margin-bottom:14px">
+                <label for="customerType">Order type</label>
+                <select class="input" id="customerType"><option value="walkin">Walk-in Customer (no personal details)</option><option value="named">Named / Returning Customer</option></select>
+              </div>
+              <div class="form-grid" id="namedCustomerFields" hidden>
                 <div class="field">
                   <label for="customerName">Customer name</label>
-                  <input class="input" id="customerName" type="text" autocomplete="name" required placeholder="e.g. Sophia Laforteza">
+                  <input class="input" id="customerName" type="text" autocomplete="name" placeholder="e.g. Sophia Laforteza">
                 </div>
 
                 <div class="field">
-                  <label for="contact">Contact number</label>
-                  <input class="input" id="contact" type="tel" inputmode="tel" required placeholder="09xx xxx xxxx">
+                  <label for="contact">Contact number (optional)</label>
+                  <input class="input" id="contact" type="tel" inputmode="tel" placeholder="09xx xxx xxxx">
                 </div>
+                <div class="field" style="grid-column:1 / -1"><label><input type="checkbox" id="saveCustomer"> Save customer for future orders</label></div>
               </div>
             </section>
 

@@ -193,10 +193,11 @@ document.addEventListener("DOMContentLoaded", function () {
     var specs = readSpecifications();
 
     var base = {
-      customer: {
-        name: document.querySelector("#customerName").value.trim(),
-        contact: document.querySelector("#contact").value.trim()
-      },
+      customer: document.querySelector("#customerType").value === "walkin" ?
+        { type: "walkin", name: "Walk-in Customer", contact: "", saveToRecords: false } :
+        { type: "named", name: document.querySelector("#customerName").value.trim(),
+          contact: document.querySelector("#contact").value.trim(),
+          saveToRecords: document.querySelector("#saveCustomer").checked },
       service: {
         id: service.id,
         name: service.name
@@ -232,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function validateContact() {
     var field = document.querySelector("#contact");
     var value = field.value.replace(/\s+/g, "");
-    var valid = /^(09|\+639)\d{9}$/.test(value);
+    var valid = !value || /^(09|\+639)\d{9}$/.test(value);
 
     field.setAttribute("aria-invalid", String(!valid));
 
@@ -244,6 +245,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     return valid;
   }
+
+  var customerType = document.querySelector("#customerType");
+  function syncCustomerType() {
+    var named = customerType.value === "named";
+    document.querySelector("#namedCustomerFields").hidden = !named;
+    document.querySelector("#customerName").required = named;
+    if (!named) { document.querySelector("#contact").setCustomValidity(""); document.querySelector("#contact").removeAttribute("aria-invalid"); }
+  }
+  customerType.addEventListener("change", syncCustomerType);
 
   serviceSelect.addEventListener("change", function () {
     existingDraft = null;
@@ -265,12 +275,12 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    validateContact();
+    if (customerType.value === "named") validateContact();
 
     if (!form.reportValidity()) return;
 
     var draft = buildDraft();
-    if (draft.pickupSlot && PaPrint.storage.pickupCount(draft.pickupSlot) >= PaPrint.storage.slotCapacity) {
+    if (draft.pickupSlot && PaPrint.storage.pickupCount(draft.pickupSlot, editOrderId) >= PaPrint.storage.slotCapacity) {
       PaPrint.ui.toast("This pickup window is full. Choose a different one."); return;
     }
     if (draft.deadline && new Date(draft.deadline).getTime() <= Date.now()) {
@@ -283,9 +293,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (draft.pickupSlot && PaPrint.storage.pickupCount(draft.pickupSlot, editOrderId) >= PaPrint.storage.slotCapacity) {
         PaPrint.ui.toast("This pickup slot is full.");return;
       }
-      var customer = PaPrint.storage.upsertCustomer(draft.customer);
+      var customer = draft.customer.type === "named" && draft.customer.saveToRecords ? PaPrint.storage.upsertCustomer(draft.customer) : null;
       PaPrint.storage.updateOrder(editOrderId,function(order){
-        order.customer = Object.assign({},draft.customer,{customerId:customer&&customer.id});
+        order.customer = Object.assign({},draft.customer,{customerId:customer&&customer.id || draft.customer.customerId || null});
         order.service=draft.service;order.specifications=draft.specifications;order.pricing=draft.pricing;
         order.priority=draft.priority;order.deadline=draft.deadline;order.pickupSlot=draft.pickupSlot;
         return order;
@@ -297,7 +307,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   if (existingDraft) {
-    document.querySelector("#customerName").value = existingDraft.customer && existingDraft.customer.name || "";
+    customerType.value = existingDraft.customer && existingDraft.customer.type === "walkin" || !existingDraft.customer || existingDraft.customer.name === "Walk-in Customer" ? "walkin" : "named";
+    document.querySelector("#saveCustomer").checked = Boolean(existingDraft.customer && existingDraft.customer.saveToRecords);
+    document.querySelector("#customerName").value = existingDraft.customer && existingDraft.customer.name !== "Walk-in Customer" ? existingDraft.customer.name || "" : "";
     document.querySelector("#contact").value = existingDraft.customer && existingDraft.customer.contact || "";
     document.querySelector("#rush").checked = Boolean(existingDraft.specifications && existingDraft.specifications.rush);
     document.querySelector("#priority").value = existingDraft.priority || (existingDraft.specifications && existingDraft.specifications.rush ? "rush" : "normal");
@@ -306,6 +318,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("#notes").value = existingDraft.specifications && existingDraft.specifications.notes || "";
   }
 
+  syncCustomerType();
   renderServiceFields();
   if (existingDraft && existingDraft.specifications) { restoreServiceFields(existingDraft.specifications); updatePrice(); }
 });
