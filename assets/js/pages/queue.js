@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
   var search = document.querySelector("#queueSearch");
   var statusSelect = document.querySelector("#queueStatus");
   var chips = Array.from(document.querySelectorAll("[data-queue-filter]"));
+  var serviceFilter = document.querySelector("#queueService"), priorityFilter = document.querySelector("#queuePriority");
+  var fromFilter = document.querySelector("#queueFrom"), toFilter = document.querySelector("#queueTo");
+  PaPrint.config.services.forEach(function(service) { var option = document.createElement("option"); option.value=service.id; option.textContent=service.name; serviceFilter.appendChild(option); });
   var createdNotice = document.querySelector("[data-created-notice]");
   var params = new URLSearchParams(window.location.search);
   var createdQueue = params.get("created");
@@ -65,9 +68,19 @@ document.addEventListener("DOMContentLoaded", function () {
       PaPrint.getActiveOrders(PaPrint.storage.getOrders())
     );
 
+    activeOrders.sort(function(a,b) {
+      var ranks = {rush: 3, high:2, normal:1};
+      var prA = ranks[a.priority || (a.specifications && a.specifications.rush ? "rush":"normal")] || 1;
+      var prB = ranks[b.priority || (b.specifications && b.specifications.rush ? "rush":"normal")] || 1;
+      return prB-prA || (new Date(a.deadline || "9999-12-31")-new Date(b.deadline || "9999-12-31"));
+    });
     var orders = activeOrders.filter(function (order) {
       var statusMatch = currentStatus === "all" || order.status === currentStatus;
-      return statusMatch && matchesSearch(order, term);
+      var day = String(order.createdAt || "").slice(0,10);
+      return statusMatch && matchesSearch(order, term) &&
+        (serviceFilter.value === "all" || order.service && order.service.id === serviceFilter.value) &&
+        (priorityFilter.value === "all" || (order.priority || (order.specifications && order.specifications.rush ? "rush":"normal")) === priorityFilter.value) &&
+        (!fromFilter.value || day >= fromFilter.value) && (!toFilter.value || day <= toFilter.value);
     });
 
     if (!orders.length) {
@@ -91,7 +104,8 @@ document.addEventListener("DOMContentLoaded", function () {
         '<article class="queue-row' + focused + '" data-order-id="' + PaPrint.escapeHTML(order.id) + '">' +
           '<div class="queue-number-line">' +
             "<strong>" + PaPrint.escapeHTML(order.queueNumber) + "</strong>" +
-            (rush ? '<span class="queue-rush">Rush</span>' : "") +
+            (rush || order.priority === "rush" ? '<span class="queue-rush">Rush</span>' : order.priority === "high" ? '<span class="queue-rush">High</span>' : "") +
+            (order.deadline && new Date(order.deadline).getTime() < Date.now() ? '<span class="queue-rush">Overdue</span>' : "") +
           "</div>" +
 
           '<div class="queue-main">' +
@@ -109,6 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
               PaPrint.escapeHTML(PaPrint.statusLabel(order.status)) +
             "</span>" +
             "<small>" + PaPrint.escapeHTML(PaPrint.formatDate(order.createdAt)) + "</small>" +
+            (order.deadline ? "<small>Due: " + PaPrint.escapeHTML(order.deadline.replace("T", " ")) + "</small>" : "") +
           "</div>" +
 
           '<div class="queue-actions">' +
@@ -121,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   PaPrint.escapeHTML(nextActionLabel(order)) +
                 "</button>"
               : "") +
-            '<button class="btn btn-danger btn-sm" type="button" data-cancel-order>Cancel</button>' +
+            (PaPrint.storage.canCancel(order) ? '<button class="btn btn-danger btn-sm" type="button" data-cancel-order>Cancel</button>' : "") +
           "</div>" +
         "</article>"
       );
@@ -153,6 +168,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   search.addEventListener("input", render);
+  [serviceFilter,priorityFilter,fromFilter,toFilter].forEach(function(field) { field.addEventListener("change", render); });
+  document.querySelector("#queueReset").addEventListener("click",function(){ search.value=""; serviceFilter.value="all"; priorityFilter.value="all"; fromFilter.value=""; toFilter.value=""; setStatusFilter("all"); });
 
   list.addEventListener("click", async function (event) {
     var row = event.target.closest("[data-order-id]");

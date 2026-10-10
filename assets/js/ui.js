@@ -91,11 +91,13 @@
 
   var navItems = [
     { id: "dashboard", label: "Dashboard", href: "index.html", icon: "⌂" },
+    { id: "customers", label: "Customers", href: "customers.html", icon: "♙" },
     { id: "services", label: "Services", href: "services.html", icon: "▦" },
     { id: "new-job", label: "New Print Job", href: "new-job.html", icon: "＋" },
     { id: "review", label: "Order Review", href: "order-review.html", icon: "✓" },
     { id: "queue", label: "Job Queue", href: "queue.html", icon: "≡" },
     { id: "history", label: "History", href: "history.html", icon: "↺" },
+    { id: "backup", label: "Backup & Restore", href: "backup.html", icon: "⇩" },
     { id: "reports", label: "Reports", href: "reports.html", icon: "▥" },
     { id: "public", label: "Public Queue", href: "public-queue.html", icon: "◉" }
   ];

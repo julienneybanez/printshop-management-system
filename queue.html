@@ -44,6 +44,12 @@
             </div>
           </div>
 
+          <div class="grid grid-2" style="margin-top:12px">
+            <div class="field"><label for="queueService">Service</label><select id="queueService"><option value="all">All services</option></select></div>
+            <div class="field"><label for="queuePriority">Priority</label><select id="queuePriority"><option value="all">All priorities</option><option value="rush">Rush</option><option value="high">High</option><option value="normal">Normal</option></select></div>
+            <div class="field"><label for="queueFrom">From date</label><input class="input" id="queueFrom" type="date"></div>
+            <div class="field"><label for="queueTo">To date</label><input class="input" id="queueTo" type="date"></div>
+          </div><button type="button" class="btn btn-neutral btn-sm" id="queueReset" style="margin-top:12px">Reset filters</button>
           <div class="queue-filter-row" aria-label="Quick queue filters">
             <button class="chip active" type="button" data-queue-filter="all">All</button>
             <button class="chip" type="button" data-queue-filter="received">Received</button>
