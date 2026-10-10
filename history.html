@@ -35,6 +35,7 @@
               </select>
             </div>
           </div>
+          <div class="grid grid-2" style="margin-top:12px"><div class="field"><label for="historyService">Service</label><select id="historyService"><option value="all">All services</option></select></div><div class="field"><label for="historyFrom">From</label><input class="input" type="date" id="historyFrom"></div><div class="field"><label for="historyTo">To</label><input class="input" type="date" id="historyTo"></div><button class="btn btn-neutral" type="button" id="historyReset">Reset filters</button></div>
         </section>
 
         <section class="card">
@@ -47,7 +48,7 @@
                   <th>Service</th>
                   <th>Created</th>
                   <th>Status</th>
-                  <th>Total</th>
+                  <th>Total</th><th>Actions</th>
                 </tr>
               </thead>
               <tbody data-history-body></tbody>
