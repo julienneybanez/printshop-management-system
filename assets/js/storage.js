@@ -44,6 +44,34 @@
     localStorage.removeItem(app.config.storageKeys.draft);
   }
 
+  var CUSTOMER_KEY = "paprint_v1_customers";
+  function getCustomers() {
+    var values = safeParse(localStorage.getItem(CUSTOMER_KEY), []);
+    return Array.isArray(values) ? values : [];
+  }
+  function saveCustomers(values) { localStorage.setItem(CUSTOMER_KEY, JSON.stringify(values)); }
+  function upsertCustomer(customer) {
+    var name = String(customer && customer.name || "").trim();
+    var contact = String(customer && customer.contact || "").trim();
+    if (!name || !contact) return null;
+    var values = getCustomers();
+    var found = values.find(function (entry) { return entry.contact === contact; });
+    if (found) { found.name = name; } else {
+      found = { id: app.generateId(), name: name, contact: contact };
+      values.push(found);
+    }
+    saveCustomers(values);
+    return found;
+  }
+  function pickupCount(slot, ignoredId) {
+    return getOrders().filter(function (order) {
+      return order.id !== ignoredId && order.pickupSlot === slot &&
+        order.status !== "cancelled" && order.status !== "claimed";
+    }).length;
+  }
+  var SLOT_CAPACITY = 3;
+  function canCancel(order) { return !!order && order.status === "received"; }
+  function canEdit(order) { return !!order && order.status === "received"; }
   function generateQueueNumber() {
     var orders = getOrders();
     var prefix = app.config.queuePrefix + "-";
@@ -64,13 +92,20 @@
   function addOrder(draft) {
     var orders = getOrders();
     var now = new Date().toISOString();
+    if (draft.pickupSlot && pickupCount(draft.pickupSlot) >= SLOT_CAPACITY) {
+      throw new Error("This pickup slot is full. Please choose another.");
+    }
+    var customerRecord = upsertCustomer(draft.customer);
 
     var order = {
       id: app.generateId(),
       queueNumber: generateQueueNumber(),
       createdAt: now,
       updatedAt: now,
-      customer: draft.customer,
+      customer: Object.assign({}, draft.customer, { customerId: customerRecord && customerRecord.id }),
+      priority: draft.priority || (draft.specifications && draft.specifications.rush ? "rush" : "normal"),
+      deadline: draft.deadline || "",
+      pickupSlot: draft.pickupSlot || "",
       service: draft.service,
       specifications: draft.specifications,
       pricing: draft.pricing,
@@ -111,6 +146,10 @@
 
   function updateStatus(orderId, status) {
     if (!app.config.statuses[status]) return null;
+    var current = getOrders().find(function (order) { return order.id === orderId; });
+    if (!current) return null;
+    if (status === "cancelled" && !canCancel(current)) return null;
+    if (["claimed", "cancelled"].includes(current.status)) return null;
 
     return updateOrder(orderId, function (order) {
       order.status = status;
@@ -129,6 +168,13 @@
 
   app.storage = {
     getOrders: getOrders,
+    getCustomers: getCustomers,
+    saveCustomers: saveCustomers,
+    upsertCustomer: upsertCustomer,
+    pickupCount: pickupCount,
+    slotCapacity: SLOT_CAPACITY,
+    canCancel: canCancel,
+    canEdit: canEdit,
     saveOrders: saveOrders,
     getDraft: getDraft,
     saveDraft: saveDraft,

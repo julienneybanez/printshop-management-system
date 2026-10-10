@@ -86,7 +86,9 @@ document.addEventListener("DOMContentLoaded", function () {
     submitting = true;
     submitButton.disabled = true;
 
-    var order = PaPrint.storage.addOrder(draft);
+    var order;
+    try { order = PaPrint.storage.addOrder(draft); }
+    catch(error) { submitting=false; submitButton.disabled=false; PaPrint.ui.toast(error.message); return; }
     PaPrint.storage.clearDraft();
 
     window.location.href =

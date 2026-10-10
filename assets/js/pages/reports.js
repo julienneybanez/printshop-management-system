@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     var rows = [
-      ["Queue Number", "Customer", "Contact", "Service", "Status", "Rush", "Created", "Updated", "Total"]
+      ["Queue Number", "Customer", "Contact", "Service", "Status", "Rush", "Created", "Updated", "Total", "Priority", "Deadline", "Pickup Slot"]
     ];
 
     orders.forEach(function (order) {
@@ -195,7 +195,8 @@ document.addEventListener("DOMContentLoaded", function () {
         order.specifications && order.specifications.rush ? "Yes" : "No",
         order.createdAt || "",
         order.updatedAt || "",
-        Number(order.pricing && order.pricing.total || 0).toFixed(2)
+        Number(order.pricing && order.pricing.total || 0).toFixed(2),
+        order.priority || "normal", order.deadline || "", order.pickupSlot || ""
       ]);
     });
 
