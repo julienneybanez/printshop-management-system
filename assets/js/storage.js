@@ -53,9 +53,9 @@
   function upsertCustomer(customer) {
     var name = String(customer && customer.name || "").trim();
     var contact = String(customer && customer.contact || "").trim();
-    if (!name || !contact) return null;
+    if (!name) return null;
     var values = getCustomers();
-    var found = values.find(function (entry) { return entry.contact === contact; });
+    var found = contact ? values.find(function (entry) { return entry.contact === contact; }) : null;
     if (found) { found.name = name; } else {
       found = { id: app.generateId(), name: name, contact: contact };
       values.push(found);
@@ -95,14 +95,16 @@
     if (draft.pickupSlot && pickupCount(draft.pickupSlot) >= SLOT_CAPACITY) {
       throw new Error("This pickup slot is full. Please choose another.");
     }
-    var customerRecord = upsertCustomer(draft.customer);
+    var incomingCustomer = draft.customer || {};
+    var isWalkIn = incomingCustomer.type === "walkin" || (!String(incomingCustomer.name || "").trim() && !String(incomingCustomer.contact || "").trim());
+    var customerRecord = isWalkIn ? null : (incomingCustomer.saveToRecords ? upsertCustomer(incomingCustomer) : null);
 
     var order = {
       id: app.generateId(),
       queueNumber: generateQueueNumber(),
       createdAt: now,
       updatedAt: now,
-      customer: Object.assign({}, draft.customer, { customerId: customerRecord && customerRecord.id }),
+      customer: isWalkIn ? { type: "walkin", name: "Walk-in Customer", contact: "", customerId: null } : Object.assign({}, incomingCustomer, { type: "named", customerId: customerRecord && customerRecord.id || incomingCustomer.customerId || null }),
       priority: draft.priority || (draft.specifications && draft.specifications.rush ? "rush" : "normal"),
       deadline: draft.deadline || "",
       pickupSlot: draft.pickupSlot || "",

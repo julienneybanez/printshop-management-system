@@ -30,10 +30,10 @@ document.addEventListener("DOMContentLoaded", function () {
           "</div>" +
           '<div class="review-grid">' +
             '<div class="review-item"><span>Customer name</span><strong>' +
-              PaPrint.escapeHTML(draft.customer.name) +
+              PaPrint.escapeHTML(draft.customer && draft.customer.name || "Walk-in Customer") +
             "</strong></div>" +
             '<div class="review-item"><span>Contact</span><strong>' +
-              PaPrint.escapeHTML(draft.customer.contact) +
+              PaPrint.escapeHTML(draft.customer && draft.customer.contact || "Not provided") +
             "</strong></div>" +
           "</div>" +
         "</section>" +
