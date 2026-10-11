@@ -1,0 +1,13 @@
+.backup-section + .backup-section { margin-top: 18px; }
+.backup-section h2 { margin: 0 0 8px; font-size: 19px; }
+.backup-section > p { margin-top: 0; }
+.backup-section .field { margin-top: 20px; }
+.backup-preview { margin-top: 20px; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-soft); }
+.backup-preview-heading { display: flex; align-items: center; gap: 12px; justify-content: space-between; flex-wrap: wrap; }
+.backup-preview-heading h3 { margin: 0; font-size: 17px; }
+.backup-stats { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin: 18px 0; }
+.backup-stats > div { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px; background: var(--surface); }
+.backup-stats dt { font-size: 12px; color: var(--muted); }
+.backup-stats dd { margin: 6px 0 0; font-size: 17px; font-weight: 750; overflow-wrap: anywhere; }
+.backup-warning { color: var(--danger); font-size: 13px; margin: 0 0 14px; }
+@media(max-width: 500px) { .backup-stats { grid-template-columns: 1fr; } }

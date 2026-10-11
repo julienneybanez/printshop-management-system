@@ -1,1 +1,56 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Backup • PaPrint</title><link rel="stylesheet" href="assets/css/app.css"></head><body><div class="shell"><aside id="sidebar"></aside><main class="main"><header id="topbar"></header><section class="page"><header class="page-heading"><h1>Backup & Restore</h1></header><section class="card card-pad"><p>Download a JSON backup of orders and customers, or restore a previously exported backup. Restore replaces the current local data.</p><button class="btn btn-primary" id="exportBackup">Export JSON backup</button><div class="field" style="margin-top:24px"><label for="restoreFile">Choose JSON backup</label><input class="input" type="file" id="restoreFile" accept=".json,application/json"></div><button class="btn btn-danger" id="restoreBackup" type="button">Restore selected backup</button></section></section></main></div><script src="assets/js/core.js"></script><script src="assets/js/storage.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/pages/backup.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Backup & Restore • PaPrint</title>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/pages/backup.css">
+</head>
+<body>
+  <div class="shell">
+    <aside id="sidebar"></aside>
+    <main class="main">
+      <header id="topbar"></header>
+      <section class="page">
+        <header class="page-heading">
+          <h1>Backup & Restore</h1>
+          <p>Save your orders and customer records, or preview an earlier backup before restoring it.</p>
+        </header>
+        <section class="card card-pad backup-section">
+          <h2>Export your data</h2>
+          <p class="muted">Download a JSON backup of orders and registered customers stored in this browser.</p>
+          <button class="btn btn-primary" id="exportBackup" type="button">Export JSON backup</button>
+        </section>
+        <section class="card card-pad backup-section">
+          <h2>Restore a backup</h2>
+          <p class="muted">Restoring replaces the existing orders and registered customers in this browser. Review the file first.</p>
+          <div class="field">
+            <label for="restoreFile">Choose JSON backup</label>
+            <input class="input" type="file" id="restoreFile" accept=".json,application/json">
+          </div>
+          <p class="helper" id="backupMessage" role="status" aria-live="polite">Select a PaPrint JSON backup (maximum 5 MB) to see its contents.</p>
+          <section class="backup-preview" id="backupPreview" hidden aria-label="Backup preview">
+            <div class="backup-preview-heading">
+              <h3>Backup preview</h3>
+              <span class="badge badge-received" id="backupValidity">Valid backup</span>
+            </div>
+            <dl class="backup-stats">
+              <div><dt>Orders</dt><dd id="backupOrderCount">0</dd></div>
+              <div><dt>Registered customers</dt><dd id="backupCustomerCount">0</dd></div>
+              <div><dt>Walk-in orders</dt><dd id="backupWalkinCount">0</dd></div>
+              <div><dt>Exported</dt><dd id="backupDate">Not recorded</dd></div>
+            </dl>
+            <p class="backup-warning">This action will replace the orders and registered customers currently saved in this browser. Export a backup first if you want to keep the current data.</p>
+            <button class="btn btn-danger" id="restoreBackup" type="button">Restore this backup</button>
+          </section>
+        </section>
+      </section>
+    </main>
+  </div>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/pages/backup.js"></script>
+</body>
+</html>
