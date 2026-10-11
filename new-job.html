@@ -31,12 +31,13 @@
 
               <div class="field" style="margin-bottom:14px">
                 <label for="customerType">Order type</label>
-                <select class="input" id="customerType"><option value="walkin">Walk-in Customer (no personal details)</option><option value="named">Named / Returning Customer</option></select>
+                <select class="input" id="customerType"><option value="walkin">Walk-in Customer (no personal details)</option><option value="existing">Existing Customer</option><option value="named">New Named Customer</option></select>
               </div>
-              <div class="form-grid" id="namedCustomerFields" hidden>
+              <div class="field" id="existingCustomerFields" hidden style="margin-bottom:14px"><label for="existingCustomerId">Choose registered customer</label><select class="input" id="existingCustomerId"><option value="">Select a customer</option></select><p class="helper">Customers with identical names are distinguished by contact details and a record reference.</p></div><div class="form-grid" id="namedCustomerFields" hidden>
                 <div class="field">
                   <label for="customerName">Customer name</label>
                   <input class="input" id="customerName" type="text" autocomplete="name" placeholder="e.g. Sophia Laforteza">
+                  <div id="customerSuggestions" class="customer-suggestions" hidden aria-live="polite"></div>
                 </div>
 
                 <div class="field">

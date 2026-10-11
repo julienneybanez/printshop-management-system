@@ -188,12 +188,49 @@ document.addEventListener("DOMContentLoaded", function () {
     return specs;
   }
 
+  var existingCustomerField = document.querySelector("#existingCustomerId");
+  PaPrint.storage.getCustomers().forEach(function (c) {
+    var option = document.createElement("option");
+    option.value = c.id;
+    option.textContent = c.name + " · " + (c.contact || "No contact") + " · " + c.id.slice(-7);
+    existingCustomerField.appendChild(option);
+  });
+  var nameInput = document.querySelector("#customerName");
+  var contactInput = document.querySelector("#contact");
+  var suggestionBox = document.querySelector("#customerSuggestions");
+  var selectedMatchId = "";
+  function matchingCustomers() {
+    var value = nameInput.value.trim().toLocaleLowerCase();
+    if (value.length < 2) return [];
+    return PaPrint.storage.getCustomers().filter(function(c) {
+      return String(c.name || "").toLocaleLowerCase().includes(value);
+    }).slice(0, 8);
+  }
+  function showCustomerSuggestions() {
+    selectedMatchId = "";
+    var matches = matchingCustomers();
+    suggestionBox.hidden = !matches.length;
+    suggestionBox.innerHTML = matches.length ?
+      '<p class="helper">Possible returning customers — select an existing record if it matches:</p>' +
+      matches.map(function(c) {return '<button type="button" class="btn btn-neutral btn-sm" data-customer-match="' + PaPrint.escapeHTML(c.id) + '">' + PaPrint.escapeHTML(c.name) + ' · ' + PaPrint.escapeHTML(c.contact || "No contact") + ' · ' + PaPrint.escapeHTML(c.id.slice(-7)) + '</button>';}).join(" ") : "";
+  }
+  nameInput.addEventListener("input", showCustomerSuggestions);
+  suggestionBox.addEventListener("click", function(e) {
+    var b = e.target.closest("[data-customer-match]"); if (!b) return;
+    existingCustomerField.value = b.dataset.customerMatch;
+    customerType.value = "existing";
+    syncCustomerType();
+    suggestionBox.hidden = true;
+    PaPrint.ui.toast("Existing customer selected. This order will use their saved record.");
+  });
   function buildDraft() {
     var service = PaPrint.getService(serviceSelect.value);
     var specs = readSpecifications();
 
     var base = {
-      customer: document.querySelector("#customerType").value === "walkin" ?
+      customer: document.querySelector("#customerType").value === "existing" ?
+        (function () { var chosen = PaPrint.storage.getCustomers().find(function (c) { return c.id === existingCustomerField.value; }); return chosen ? { type: "named", name: chosen.name, contact: chosen.contact || "", customerId: chosen.id, saveToRecords: false } : { type: "named", name: "", contact: "", customerId: null }; })() :
+        document.querySelector("#customerType").value === "walkin" ?
         { type: "walkin", name: "Walk-in Customer", contact: "", saveToRecords: false } :
         { type: "named", name: document.querySelector("#customerName").value.trim(),
           contact: document.querySelector("#contact").value.trim(),
@@ -249,6 +286,8 @@ document.addEventListener("DOMContentLoaded", function () {
   var customerType = document.querySelector("#customerType");
   function syncCustomerType() {
     var named = customerType.value === "named";
+    document.querySelector("#existingCustomerFields").hidden = customerType.value !== "existing";
+    existingCustomerField.required = customerType.value === "existing";
     document.querySelector("#namedCustomerFields").hidden = !named;
     document.querySelector("#customerName").required = named;
     if (!named) { document.querySelector("#contact").setCustomValidity(""); document.querySelector("#contact").removeAttribute("aria-invalid"); }
@@ -272,12 +311,25 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   document.querySelector("#contact").addEventListener("input", validateContact);
 
-  form.addEventListener("submit", function (event) {
+  form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     if (customerType.value === "named") validateContact();
 
     if (!form.reportValidity()) return;
+    if (customerType.value === "named" && document.querySelector("#saveCustomer").checked) {
+      var exactMatches = PaPrint.storage.getCustomers().filter(function(c) {
+        return String(c.name || "").trim().toLocaleLowerCase() === nameInput.value.trim().toLocaleLowerCase();
+      });
+      if (exactMatches.length) {
+        var proceed = await PaPrint.ui.confirmAction({
+          title: "Possible returning customer",
+          message: "There are " + exactMatches.length + " saved customer(s) with this name. To link a previous record, cancel and select a suggestion or Existing Customer. Create a separate record anyway?",
+          confirmText: "Create separate record", cancelText: "Select existing customer"
+        });
+        if (!proceed) { showCustomerSuggestions(); return; }
+      }
+    }
 
     var draft = buildDraft();
     if (draft.pickupSlot && PaPrint.storage.pickupCount(draft.pickupSlot, editOrderId) >= PaPrint.storage.slotCapacity) {
@@ -307,7 +359,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   if (existingDraft) {
-    customerType.value = existingDraft.customer && existingDraft.customer.type === "walkin" || !existingDraft.customer || existingDraft.customer.name === "Walk-in Customer" ? "walkin" : "named";
+    customerType.value = existingDraft.customer && existingDraft.customer.type === "walkin" || !existingDraft.customer || existingDraft.customer.name === "Walk-in Customer" ? "walkin" : (existingDraft.customer.customerId ? "existing" : "named");
+    existingCustomerField.value = existingDraft.customer && existingDraft.customer.customerId || "";
     document.querySelector("#saveCustomer").checked = Boolean(existingDraft.customer && existingDraft.customer.saveToRecords);
     document.querySelector("#customerName").value = existingDraft.customer && existingDraft.customer.name !== "Walk-in Customer" ? existingDraft.customer.name || "" : "";
     document.querySelector("#contact").value = existingDraft.customer && existingDraft.customer.contact || "";
