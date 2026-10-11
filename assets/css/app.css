@@ -754,3 +754,6 @@ textarea {
     animation: none !important;
   }
 }
+
+/* Keep conditional fields hidden regardless of layout display rules. */
+[hidden] { display: none !important; }
