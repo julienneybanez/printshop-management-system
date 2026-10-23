@@ -1,2 +1,12 @@
-.customer-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));align-items:end;gap:16px;margin-bottom:18px}.customer-form .btn{min-height:42px} .page .card + .card{margin-top:16px}
-.customer-orders-panel{margin-top:18px}.customer-orders-panel .table{min-width:680px}
+.customer-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));align-items:end;gap:16px;margin-bottom:18px}
+.customer-form .btn{min-height:42px}
+.page .card + .card{margin-top:16px}
+.customer-orders-panel{margin-top:18px}
+.customer-orders-panel .table{min-width:550px}
+.customer-small{font-size:12px;display:block;margin-top:4px}
+.customer-potential{display:inline-block;font-size:12px;background:#fff3d6;color:#76500e;border-radius:6px;padding:2px 6px;margin-top:6px}
+.customer-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.customer-manage-panel{display:grid;gap:12px;margin-top:16px}
+.customer-manage-panel[hidden]{display:none}
+.customer-merge-summary{border:1px solid var(--line);background:var(--surface-soft);padding:12px;border-radius:10px}
+@media(max-width:600px){.customer-actions{align-items:stretch}.customer-actions .btn{flex:1}.customer-manage-panel{padding:16px}}

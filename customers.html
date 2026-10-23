@@ -1,2 +1,32 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Customers • PaPrint</title><link rel="stylesheet" href="assets/css/app.css"><link rel="stylesheet" href="assets/css/pages/customers.css">  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
-</head><body><div class="shell"><aside id="sidebar"></aside><main class="main"><header id="topbar"></header><section class="page"><header class="page-heading"><h1>Customer Records</h1></header><section class="card card-pad"><form id="customerForm" class="customer-form"><div class="field"><label for="customerName">Name</label><input class="input" id="customerName" required></div><div class="field"><label for="customerContact">Contact number (optional)</label><input class="input" id="customerContact" pattern="(?:09\d{9}|\+639\d{9})"></div><button class="btn btn-primary">Save customer</button></form><div class="field"><label for="customerSearch">Find customer</label><input class="input" id="customerSearch" type="search" placeholder="Name or contact"></div></section><section class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Name</th><th>Contact</th><th>Orders</th><th>Total spent</th><th>Actions</th></tr></thead><tbody id="customerRows"></tbody></table></div></section><section id="customerOrdersPanel" class="card card-pad customer-orders-panel" hidden><div class="section-heading"><h2 id="customerOrdersTitle">Previous orders</h2><button class="btn btn-neutral btn-sm" type="button" id="closeCustomerOrders">Close</button></div><div id="customerOrdersContent"></div></section></section></main></div><script src="assets/js/core.js"></script><script src="assets/js/storage.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/pages/customers.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Customers • PaPrint</title>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/pages/customers.css">
+</head>
+<body>
+<div class="shell"><aside id="sidebar"></aside><main class="main"><header id="topbar"></header>
+<section class="page">
+  <header class="page-heading"><h1>Customer Records</h1></header>
+  <section class="card card-pad">
+    <form id="customerForm" class="customer-form">
+      <div class="field"><label for="customerName">Name or nickname</label><input class="input" id="customerName" maxlength="100" required></div>
+      <div class="field"><label for="customerContact">Contact number (optional)</label><input class="input" id="customerContact" pattern="(?:09\d{9}|\+639\d{9})"></div>
+      <button class="btn btn-primary">Save customer</button>
+    </form>
+    <div class="field"><label for="customerSearch">Find customer</label><input class="input" id="customerSearch" type="search" placeholder="Name, alias, contact or record ID"></div>
+    <p class="muted">Matching names or phone numbers are suggestions only. Every customer has a separate ID until staff verifies and merges records.</p>
+  </section>
+  <section class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Customer</th><th>Contact</th><th>Jobs (requests)</th><th>Order value</th><th>Actions</th></tr></thead><tbody id="customerRows"></tbody></table></div></section>
+  <section class="card card-pad customer-manage-panel" id="customerManagePanel" hidden aria-live="polite"></section>
+  <section id="customerOrdersPanel" class="card card-pad customer-orders-panel" hidden>
+    <div class="section-heading"><h2 id="customerOrdersTitle">Customer activity</h2><button class="btn btn-neutral btn-sm" type="button" id="closeCustomerOrders">Close</button></div>
+    <div id="customerOrdersContent"></div>
+  </section>
+</section></main></div>
+<script src="assets/js/core.js"></script><script src="assets/js/storage.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/pages/customers.js"></script>
+</body>
+</html>
