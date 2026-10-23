@@ -4,6 +4,7 @@
   // All PaPrint records are local to this browser and origin. No real account verification.
   var CUSTOMER_KEY = "paprint_v1_customers";
   var REQUESTS_KEY = "paprint_v1_requests";
+  var PRICING_KEY = "paprint_v1_pricing_rates";
   var SLOT_CAPACITY = 3;
   var keys = app.config.storageKeys;
 
@@ -24,6 +25,16 @@
   function saveCustomers(customers) { writeArray(CUSTOMER_KEY, Array.isArray(customers) ? customers : []); }
   function getRequests() { return arrayFrom(REQUESTS_KEY); }
   function saveRequests(requests) { writeArray(REQUESTS_KEY, Array.isArray(requests) ? requests : []); }
+  function getPricingRates() {
+    var saved = safeParse(localStorage.getItem(PRICING_KEY), {});
+    return saved && typeof saved === "object" && !Array.isArray(saved) ? saved : {};
+  }
+  function savePricingRates(rates) {
+    if (!rates || typeof rates !== "object" || Array.isArray(rates)) {
+      throw new Error("Invalid pricing settings.");
+    }
+    localStorage.setItem(PRICING_KEY, JSON.stringify(rates));
+  }
   function getDraft() { return safeParse(localStorage.getItem(keys.draft), null); }
   function saveDraft(draft) { localStorage.setItem(keys.draft, JSON.stringify(draft)); }
   function clearDraft() { localStorage.removeItem(keys.draft); }
@@ -282,6 +293,7 @@
 
   app.storage = {
     getOrders:getOrders, saveOrders:saveOrders, getDraft:getDraft, saveDraft:saveDraft, clearDraft:clearDraft,
+    getPricingRates:getPricingRates, savePricingRates:savePricingRates,
     getCustomers:getCustomers, saveCustomers:saveCustomers, upsertCustomer:upsertCustomer,
     createCustomer:createCustomer, findCustomerCandidates:findCustomerCandidates,
     addCustomerAlias:addCustomerAlias, saveCustomerRequest:saveCustomerRequest,

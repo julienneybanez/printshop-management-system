@@ -60,3 +60,42 @@
     min-height: auto;
   }
 }
+
+/* Staff price editor */
+.service-pricing-tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 18px;
+}
+.service-pricing-tools p { margin: 0; }
+.service-actions { display: flex; flex-wrap: wrap; gap: 9px; }
+.service-actions .btn { flex: 1 1 120px; text-align: center; }
+.pricing-modal { width: min(100%, 540px); max-height: min(85vh, 680px); overflow-y: auto; }
+.pricing-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+.pricing-fields .field { min-width: 0; }
+.pricing-fields label { display: block; margin-bottom: 6px; }
+.pricing-input-wrap { position: relative; }
+.pricing-input-wrap > span {
+  position: absolute;
+  top: 50%;
+  left: 13px;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+.pricing-input-wrap .input { width: 100%; padding-left: 30px; font-variant-numeric: tabular-nums; }
+.pricing-modal-actions { flex-wrap: wrap; }
+.pricing-modal-actions [data-reset-rates] { margin-right: auto; }
+@media (max-width: 650px) {
+  .service-pricing-tools { flex-direction: column; align-items: flex-start; }
+  .pricing-fields { grid-template-columns: 1fr; }
+  .pricing-modal-actions { flex-direction: column; }
+  .pricing-modal-actions .btn { width: 100%; }
+}

@@ -8,6 +8,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var host = document.querySelector("[data-review-host]");
   var draft = PaPrint.storage.getDraft();
+  if (draft) {
+    // Recalculate drafts with the current shop rates; previously saved orders are untouched.
+    draft.pricing = PaPrint.pricing.calculate(draft);
+    PaPrint.storage.saveDraft(draft);
+  }
 
   if (!draft) {
     host.innerHTML =
@@ -87,7 +92,10 @@ document.addEventListener("DOMContentLoaded", function () {
     submitButton.disabled = true;
 
     var order;
-    try { order = PaPrint.storage.addOrder(draft); }
+    try {
+      draft.pricing = PaPrint.pricing.calculate(draft);
+      order = PaPrint.storage.addOrder(draft);
+    }
     catch(error) { submitting=false; submitButton.disabled=false; PaPrint.ui.toast(error.message); return; }
     PaPrint.storage.clearDraft();
 
