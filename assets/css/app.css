@@ -826,3 +826,23 @@ select.filter-applied,input.filter-applied {border-color:#3c70ff!important;backg
 .customer-topbar .brand-name,.customer-brand .brand-name,.customer-topbar .brand-name span {color:var(--text);}
 @media(max-width:780px){.page{padding:25px 17px 38px;}.sidebar{background:#171719;}.topbar{padding:0 16px;}}
 @media(max-width:500px){.topbar-actions{gap:7px;}.topbar-actions .btn{padding:0 10px;}.page-heading h1{font-size:30px;}.metric{padding:18px;}}
+
+/* New incoming request count in the staff sidebar */
+.nav-request-badge {
+  margin-left: auto;
+  min-width: 21px;
+  height: 21px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #dc4451;
+  color: #fff;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.nav-request-badge[hidden] { display: none; }

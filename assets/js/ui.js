@@ -115,10 +115,59 @@
     chevron:'<path d="m6 9 6 6 6-6"/>'
   };
   function navIcon(name) {return '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(iconPaths[name]||iconPaths.grid)+'</svg>';}
+
+  // Unseen customer requests, tracked only within this browser.
+  var SEEN_REQUESTS_KEY = "paprint_v1_seen_incoming_request_ids";
+  var REQUESTS_KEY = "paprint_v1_requests";
+
+  function requestIds(pendingOnly) {
+    try {
+      if (!app.storage || typeof app.storage.getRequests !== "function") return [];
+      return app.storage.getRequests().filter(function (request) {
+        return request && request.id != null && (!pendingOnly || request.status === "pending");
+      }).map(function (request) { return String(request.id); });
+    } catch (error) { return []; }
+  }
+
+  function seenRequestIds() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(SEEN_REQUESTS_KEY) || "[]");
+      return Array.isArray(saved) ? saved : [];
+    } catch (error) { return []; }
+  }
+
+  function markRequestsSeen() {
+    try {
+      localStorage.setItem(SEEN_REQUESTS_KEY, JSON.stringify(requestIds(false)));
+    } catch (error) {
+      // The badge is optional if browser storage is blocked.
+    }
+  }
+
+  function refreshRequestBadge() {
+    var seen = new Set(seenRequestIds());
+    var unseen = requestIds(true).filter(function (id) { return !seen.has(id); }).length;
+    document.querySelectorAll("[data-incoming-count]").forEach(function (badge) {
+      badge.textContent = unseen > 99 ? "99+" : String(unseen);
+      badge.hidden = unseen === 0;
+      badge.setAttribute("aria-label", unseen + " new incoming requests");
+    });
+  }
+
+  window.addEventListener("storage", function (event) {
+    if (event.key !== REQUESTS_KEY && event.key !== SEEN_REQUESTS_KEY) return;
+    if (event.key === REQUESTS_KEY &&
+        location.pathname.split("/").pop() === "incoming-requests.html") {
+      markRequestsSeen();
+    }
+    refreshRequestBadge();
+  });
+  window.addEventListener("focus", refreshRequestBadge);
+
   function sidebarMarkup(activePage) {
     function navLink(item) {
       var active = item.id === activePage ? " active" : "";
-      return '<a class="nav-link'+active+'" href="'+item.href+'"'+(active?' aria-current="page"':'')+'><span class="nav-icon">'+navIcon(item.icon)+'</span><span>'+app.escapeHTML(item.label)+'</span></a>';
+      return '<a class="nav-link'+active+'" href="'+item.href+'"'+(active?' aria-current="page"':'')+'><span class="nav-icon">'+navIcon(item.icon)+'</span><span>'+app.escapeHTML(item.label)+'</span>'+(item.id==='requests'?'<span class="nav-request-badge" data-incoming-count hidden></span>':'')+'</a>';
     }
     return '<a class="brand" href="index.html"><img class="brand-logo" src="assets/images/logo.png" alt=""><span class="brand-name">Pa<span>Print</span></span></a>'+
       '<nav class="nav-group" aria-label="Main navigation">'+navItems.map(navLink).join('')+
@@ -156,6 +205,7 @@
   document.addEventListener('change',syncFilterStates);
   function initShell(options) {
     options = options || {};
+    if (options.activePage === "requests") markRequestsSeen();
 
     var sidebar = document.querySelector("#sidebar");
     var topbar = document.querySelector("#topbar");
@@ -163,6 +213,7 @@
     if (sidebar) {
       sidebar.classList.add("sidebar");
       sidebar.innerHTML = sidebarMarkup(options.activePage || "");
+      refreshRequestBadge();
     }
 
     if (topbar) {
@@ -324,6 +375,10 @@
       var dest=new URL(anchor.href,location.href);
       if(dest.origin!==location.origin||!dest.pathname.endsWith('.html')||dest.pathname===location.pathname&&dest.search===location.search)return;
       if(isPortal(dest.pathname.split('/').pop())!==isPortal(location.pathname.split('/').pop()))return;
+      if (dest.pathname.split('/').pop() === 'incoming-requests.html') {
+        markRequestsSeen();
+        refreshRequestBadge();
+      }
       event.preventDefault();navigateTo(dest.href,true);
     });
     window.addEventListener('popstate',function(){navigateTo(location.href,false);});
