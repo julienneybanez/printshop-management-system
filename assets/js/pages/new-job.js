@@ -203,7 +203,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var value = nameInput.value.trim().toLocaleLowerCase();
     if (value.length < 2) return [];
     return PaPrint.storage.getCustomers().filter(function(c) {
-      return String(c.name || "").toLocaleLowerCase().includes(value);
+      var possibleNames = [c.name].concat(Array.isArray(c.aliases) ? c.aliases : []);
+      return possibleNames.some(function(name) {
+        return String(name || "").toLocaleLowerCase().includes(value);
+      });
     }).slice(0, 8);
   }
   function showCustomerSuggestions() {

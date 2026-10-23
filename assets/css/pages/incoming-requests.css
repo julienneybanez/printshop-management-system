@@ -1,1 +1,20 @@
-.request-card-list{display:grid;gap:14px}.request-card p{overflow-wrap:anywhere}.request-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.request-filter-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}.request-filter-row .input{width:220px;max-width:100%}@media(max-width:520px){.request-filter-row{align-items:stretch;flex-direction:column}.request-filter-row .input{width:100%}}
+.request-card-list{display:grid;gap:14px}
+.request-card p{overflow-wrap:anywhere}
+.request-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.request-filter-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.request-filter-row .input{width:220px;max-width:100%}
+.request-status{font-weight:700;border:1px solid transparent;text-transform:capitalize;border-radius:999px;padding:5px 10px;white-space:nowrap}
+.request-status--pending{background:#fff3d6;color:#8b5300;border-color:#eed49a}
+.request-status--approved{background:#dcfce7;color:#166534;border-color:#86efac}
+.request-status--rejected{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+.request-status--cancelled{background:#e5e7eb;color:#374151;border-color:#cbd5e1}
+.request-status--other{background:#dbeafe;color:#1e40af;border-color:#93c5fd}
+.request-match{background:#fff8e5;border-left:3px solid #d59c33;padding:9px 12px;border-radius:6px;color:#684807}
+.request-link-modal{max-width:520px}
+.request-link-modal select{width:100%;margin-top:8px}
+[data-theme="dark"] .request-status--pending{background:#493719;color:#ffe3a1;border-color:#8b671c}
+[data-theme="dark"] .request-status--approved{background:#183b29;color:#a6f4c2;border-color:#2f7753}
+[data-theme="dark"] .request-status--rejected{background:#4f2323;color:#ffc4c4;border-color:#924848}
+[data-theme="dark"] .request-status--cancelled{background:#343b46;color:#dbe2ed;border-color:#667184}
+[data-theme="dark"] .request-match{background:#3e331a;color:#ffe3a1;border-left-color:#b48d33}
+@media(max-width:520px){.request-filter-row{align-items:stretch;flex-direction:column}.request-filter-row .input{width:100%}}
