@@ -55,7 +55,7 @@
     var contact = String(customer && customer.contact || "").trim();
     if (!name) return null;
     var values = getCustomers();
-    var found = contact ? values.find(function (entry) { return entry.contact === contact; }) : null;
+    var found = customer && customer.id ? values.find(function (entry) { return entry.id === customer.id; }) : null;
     if (found) { found.name = name; } else {
       found = { id: app.generateId(), name: name, contact: contact };
       values.push(found);
@@ -97,7 +97,8 @@
     }
     var incomingCustomer = draft.customer || {};
     var isWalkIn = incomingCustomer.type === "walkin" || (!String(incomingCustomer.name || "").trim() && !String(incomingCustomer.contact || "").trim());
-    var customerRecord = isWalkIn ? null : (incomingCustomer.saveToRecords ? upsertCustomer(incomingCustomer) : null);
+    var existingRecord = incomingCustomer.customerId ? getCustomers().find(function (c) { return c.id === incomingCustomer.customerId; }) : null;
+    var customerRecord = isWalkIn ? null : (existingRecord || (incomingCustomer.saveToRecords ? upsertCustomer(incomingCustomer) : null));
 
     var order = {
       id: app.generateId(),
@@ -168,8 +169,48 @@
     });
   }
 
+
+  var REQUESTS_KEY = "paprint_v1_requests";
+  function getRequests() {
+    var values = safeParse(localStorage.getItem(REQUESTS_KEY), []);
+    return Array.isArray(values) ? values : [];
+  }
+  function saveRequests(values) {
+    localStorage.setItem(REQUESTS_KEY, JSON.stringify(values));
+  }
+  function updateRequest(id, changes) {
+    var values = getRequests();
+    var index = values.findIndex(function (r) { return r.id === id; });
+    if (index < 0) return null;
+    var previous = values[index];
+    var nextStatus = changes && changes.status;
+    if (nextStatus && nextStatus !== previous.status) {
+      if (previous.status !== "pending" || !["approved", "rejected", "cancelled"].includes(nextStatus)) return null;
+    }
+    var now = new Date().toISOString();
+    var events = Array.isArray(previous.events) ? previous.events.slice() : [
+      { status: "pending", label: "Request submitted", timestamp: previous.createdAt || now }
+    ];
+    if (nextStatus && nextStatus !== previous.status) {
+      var labels = { approved: "Approved by staff", rejected: "Rejected by staff", cancelled: "Cancelled by customer" };
+      events.push({ status: nextStatus, label: labels[nextStatus] || nextStatus, timestamp: now });
+    }
+    values[index] = Object.assign({}, previous, changes, { events: events, updatedAt: now });
+    saveRequests(values);
+    return values[index];
+  }
+  function cancelRequest(id) {
+    var request = getRequests().find(function (r) { return r.id === id; });
+    if (!request || request.status !== "pending") return null;
+    return updateRequest(id, { status: "cancelled" });
+  }
+
   app.storage = {
     getOrders: getOrders,
+    getRequests: getRequests,
+    saveRequests: saveRequests,
+    updateRequest: updateRequest,
+    cancelRequest: cancelRequest,
     getCustomers: getCustomers,
     saveCustomers: saveCustomers,
     upsertCustomer: upsertCustomer,
